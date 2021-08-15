@@ -1,10 +1,11 @@
-// dependencies
+// all dependencies required
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 const util = require("util");
 require("console.table");
+require("dotenv").config();
 
-// create the connection for the sql database
+// connection for the sql database
 const connection = mysql.createConnection({
   host: "localhost",
   port: 3306,
@@ -13,16 +14,16 @@ const connection = mysql.createConnection({
   database: process.env.DB_NAME,
 });
 
-// connect to the mysql server and sql database
+// connect mysql server and database
 connection.connect((err) => {
   if (err) throw err;
   start();
 });
 
-// promisify all connection queries
+// promisify connection queries
 connection.query = util.promisify(connection.query);
 
-// starts the CLI
+// Promt start
 const start = () => {
   inquirer
     .prompt({
@@ -70,7 +71,6 @@ const start = () => {
     });
 };
 
-// define view functions
 const viewAllDepartments = () => {
   connection.query(
     "SELECT department.id, department.name FROM department",
@@ -104,7 +104,7 @@ const viewAllEmployees = () => {
   );
 };
 
-// define add functions
+// add functions
 const addDepartment = () => {
   inquirer
     .prompt({
@@ -210,7 +210,7 @@ const addEmployee = async () => {
     });
 };
 
-// define update functions
+// update function
 const updateEmployeeRole = async () => {
   inquirer
     .prompt([
@@ -247,7 +247,7 @@ const updateEmployeeRole = async () => {
     });
 };
 
-// query functions that pull choices
+// pull choices
 const departmentChoices = async () =>
   await connection.query(
     "SELECT department.name AS name, department.id AS value FROM department ORDER BY name"
